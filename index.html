@@ -902,11 +902,17 @@ function qrCanvas(url,s=8,pad=2){const m=qrMatrix(url),n=m.length,c=document.cre
   const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.fillStyle='#000';m.forEach((r,y)=>r.forEach((v,i)=>{if(v)x.fillRect((i+pad)*s,(y+pad)*s,s,s);}));return c;}
 function qrPng(url){return qrCache[url]||(qrCache[url]=qrCanvas(url).toDataURL('image/png'));}
 function qrTable(url){
-  const m=qrMatrix(url),px=m.length>33?2:3;
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="background:#ffffff;"><tr><td style="padding:${px*2}px;">`+m.map(r=>{
-   const runs=[];let c=r[0],k=0;for(const v of r){if(v===c)k++;else{runs.push([c,k]);c=v;k=1;}}runs.push([c,k]);
-   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>`+runs.map(([v,k])=>`<td width="${k*px}" height="${px}" bgcolor="${v?'#000000':'#ffffff'}" style="width:${k*px}px;height:${px}px;background:${v?'#000000':'#ffffff'};font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td>`).join('')+`</tr></table>`;
-  }).join('')+`</td></tr></table>`;
+  /* 표 하나 + 빈 칸만 사용: 메일 프로그램이 칸마다 높이를 늘려 QR이 세로로 길어지는 것을 막음 */
+  const m=qrMatrix(url),n=m.length,px=n>33?2:3,pad=px*2,W=n*px+pad*2;
+  const cols='<col width="'+pad+'" style="width:'+pad+'px;">'+Array(n).fill('<col width="'+px+'" style="width:'+px+'px;">').join('')+'<col width="'+pad+'" style="width:'+pad+'px;">';
+  const cell=(k,bg,h)=>'<td'+(k>1?' colspan="'+k+'"':'')+' height="'+h+'" bgcolor="'+bg+'" style="padding:0;margin:0;height:'+h+'px;background:'+bg+';font-size:0;line-height:0;mso-line-height-rule:exactly;"></td>';
+  let rows='<tr style="height:'+pad+'px;">'+cell(n+2,'#ffffff',pad)+'</tr>';
+  for(const r of m){
+    const runs=[];let c=r[0],k=0;for(const v of r){if(v===c)k++;else{runs.push([c,k]);c=v;k=1;}}runs.push([c,k]);
+    rows+='<tr style="height:'+px+'px;">'+cell(1,'#ffffff',px)+runs.map(([v,k])=>cell(k,v?'#000000':'#ffffff',px)).join('')+cell(1,'#ffffff',px)+'</tr>';
+  }
+  rows+='<tr style="height:'+pad+'px;">'+cell(n+2,'#ffffff',pad)+'</tr>';
+  return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="'+W+'" bgcolor="#ffffff" style="width:'+W+'px;table-layout:fixed;border-collapse:collapse;border-spacing:0;background:#ffffff;"><colgroup>'+cols+'</colgroup>'+rows+'</table>';
 }
 const DARK=['key','lime'];
 function qr(){
