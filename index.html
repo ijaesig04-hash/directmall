@@ -246,7 +246,7 @@ table.t td.n,table.t th.n{text-align:right}
     <nav class="tabs" role="tablist">
       <button class="tab" role="tab" id="tab-make" aria-selected="true" aria-controls="v-make">✉️ 메일 만들기</button>
       <button class="tab" role="tab" id="tab-kakao" aria-selected="false" aria-controls="v-make">💬 카톡 보내기</button>
-      <button class="tab" role="tab" id="tab-dash" aria-selected="false" aria-controls="v-dash" hidden>📊 발송 관리</button>
+      <button class="tab" role="tab" id="tab-dash" aria-selected="false" aria-controls="v-dash">📊 발송 기록</button>
     </nav>
   </div>
 </header>
@@ -2076,17 +2076,33 @@ const SCOLOR={'발송':'var(--idle)','반응':'var(--info)','상담':'var(--warn
 let DB=null, ROWS=[], ORDERS=[], dbReady=false, canWrite=true, lastRec=null;
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 function note(t){const n=$('dbNote');if(t){n.textContent=t;n.hidden=false;}else n.hidden=true;}
+/* 이 폰에 저장하는 기록 보관함 (공유 저장소가 없을 때 사용) */
+function localDb(){
+  const K='s1mail.db.',ls={get:k=>{try{return JSON.parse(localStorage.getItem(K+k)||'{}')}catch(e){return {}}},set:(k,v)=>{try{localStorage.setItem(K+k,JSON.stringify(v));return true}catch(e){return false}}};
+  const subs={};
+  const snap=name=>{const o=ls.get(name);return {docs:Object.keys(o).map(id=>({id,data:()=>o[id]})),metadata:{fromCache:false}};};
+  const fire=name=>(subs[name]||[]).forEach(f=>{try{f(snap(name))}catch(e){}});
+  const quota=()=>{const e=new Error('quota');e.code='quota_exceeded';return e;};
+  const put=(name,id,fn)=>{const o=ls.get(name);fn(o,id);if(!ls.set(name,o))throw quota();fire(name);};
+  return {collection:name=>{
+    let ord=null,lim=1e9;
+    const q={orderBy(f,d){ord=[f,d];return q;},limit(n){lim=n;return q;},
+      onSnapshot(cb){(subs[name]=subs[name]||[]).push(sn=>{let d=sn.docs.slice();if(ord)d.sort((a,b)=>{const x=a.data()[ord[0]],y=b.data()[ord[0]];return (x>y?1:x<y?-1:0)*(ord[1]==='desc'?-1:1);});cb({docs:d.slice(0,lim),metadata:sn.metadata});});cb(Object.assign({},snap(name),{docs:(()=>{let d=snap(name).docs;if(ord)d.sort((a,b)=>{const x=a.data()[ord[0]],y=b.data()[ord[0]];return (x>y?1:x<y?-1:0)*(ord[1]==='desc'?-1:1);});return d.slice(0,lim);})()}));},
+      async add(rec){const id='l'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);put(name,id,(o,i)=>{o[i]=rec;});return {id};},
+      doc(id){return {async update(p){put(name,id,(o,i)=>{o[i]=Object.assign({},o[i],p);});},async set(v){put(name,id,(o,i)=>{o[i]=v;});},async delete(){put(name,id,(o,i)=>{delete o[i];});}};}};
+    return q;}};
+}
 async function initDb(){
   renderDash();
   const timer=setTimeout(()=>{if(!dbReady)note('기록을 아직 불러오지 못했어요. 잠시 후 다시 열어 주세요.');},10000);
-  const db=await useCap('db');
-  if(!db){clearTimeout(timer);note('발송·구매 기록은 공유 링크(claude.ai)에 로그인해서 열었을 때 저장돼요. 지금은 메일·카톡 만들기만 쓸 수 있어요.');canWrite=false;renderDash();return;}
+  let db=await useCap('db'),local=false;
+  if(!db){db=localDb();local=true;}
   DB=db;
   const user=await useCap('user');
   if(user&&typeof user.can==='function'){try{const c=await user.can('data.write');if(c===false)canWrite=false;}catch(e){}}
   DB.collection('sends').orderBy('ts','desc').limit(1000).onSnapshot(snap=>{
     ROWS=snap.docs.map(d=>({id:d.id,...d.data()}));
-    if(!snap.metadata.fromCache){dbReady=true;clearTimeout(timer);note(canWrite?'':'보기 권한만 있어요. 기록 추가·수정은 참여 권한이 있는 분이 할 수 있어요.');}
+    if(!snap.metadata.fromCache){dbReady=true;clearTimeout(timer);note(local?'이 폰에만 저장돼요 · 메일·카톡을 복사하거나 보내면 자동으로 쌓여요 (다른 직원 기록과는 합쳐지지 않아요)':(canWrite?'':'보기 권한만 있어요. 기록 추가·수정은 참여 권한이 있는 분이 할 수 있어요.'));}
     renderDash();
   },e=>{clearTimeout(timer);note('기록을 불러오지 못했어요 ('+e.code+'). 새로고침 후 다시 시도해 주세요.');});
   DB.collection('orders').limit(1000).onSnapshot(snap=>{ORDERS=snap.docs.map(d=>({id:d.id,...d.data()}));renderDash();},()=>{});
