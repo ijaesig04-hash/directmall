@@ -740,7 +740,7 @@ ${T(`width="100%" bgcolor="${C.cream}" style="background:${C.cream};border:1px s
 
 
 /* ── 추가 디자인 (⑪~⑯) ── */
-const CAT=n=>MALL+'product/list.html?cate_no='+n;
+const CAT=n=>'https://m.s1directmall.co.kr/product/list.html?cate_no='+n;
 const PROD=[
  {cat:'가정용 보안',ic:'🏠',n:46,col:'#3b7bf6',col2:'#6aa3ff',bd:'#b9d2fd',tint:'#f2f7ff',sub:'HOME',items:['AI홈카메라','AI도어캠','안전금고 (루셀 UP · 메타큐브)']},
  {cat:'상업용 보안',ic:'🏪',n:47,col:'#7b61f5',col2:'#a48ffb',bd:'#d3c9fd',tint:'#f6f3ff',sub:'BUSINESS',items:['상업용 도어락','이지스 금고']},
@@ -979,11 +979,11 @@ function bBundle(d){
 function bDeal(d){
  const P=[['cam','AI 홈카메라','움직임을 따라가는 AI',130000,98000,25],['door','AI 도어캠','낯선 방문객부터 택배까지',469000,339000,28]];
  const col=([k,n,s,was,now,pct])=>`<td width="50%" valign="top" style="padding:6px;">${T(`width="100%" bgcolor="#ffffff" style="background:#ffffff;border:1px solid #e3e7ef;border-radius:14px;border-collapse:separate;"`,`
-  <tr><td align="center" bgcolor="${k==='cam'?'#deeff7':'#f5f5f5'}" style="background:${k==='cam'?'#deeff7':'#f5f5f5'};padding:14px;border-radius:14px 14px 0 0;">${noImg?`<div style="${F}font-size:40px;">${k==='cam'?'📹':'🚪'}</div>`:`<img src="${MAILIMG+k}.jpg" width="150" alt="${n}" style="display:block;width:150px;max-width:100%;height:auto;border:0;">`}</td></tr>
+  <tr><td align="center" bgcolor="${k==='cam'?'#deeff7':'#f5f5f5'}" style="background:${k==='cam'?'#deeff7':'#f5f5f5'};padding:14px;border-radius:14px 14px 0 0;">${noImg?`<div style="${F}font-size:40px;">${k==='cam'?'📹':'🚪'}</div>`:`<a href="${PRODUCT_URL[k==='cam'?'aicam':'doorcam']}" target="_blank"><img src="${MAILIMG+k}.jpg" width="150" alt="${n}" style="display:block;width:150px;max-width:100%;height:auto;border:0;"></a>`}</td></tr>
   <tr><td style="padding:14px 14px 4px;${F}"><div style="font-size:16px;font-weight:bold;color:${C.ink};">${n}</div><div style="font-size:12px;color:${C.mute};margin-top:2px;">${s}</div>
    <div style="font-size:12px;color:#9aa1ae;text-decoration:line-through;margin-top:10px;">${was.toLocaleString('ko-KR')}원</div>
    <div style="font-size:20px;font-weight:900;color:${C.ink};">${now.toLocaleString('ko-KR')}원 <span style="color:${C.red};font-size:16px;">${pct}%</span></div></td></tr>
-  <tr><td style="padding:10px 14px 16px;">${btn('구매하러 가기',C.blue,'#fff',{href:CAT(46),pad:'10px 18px',size:13,r:8})}</td></tr>`)}</td>`;
+  <tr><td style="padding:10px 14px 16px;">${btn('구매하러 가기',C.blue,'#fff',{href:PRODUCT_URL[k==='cam'?'aicam':'doorcam'],pad:'10px 18px',size:13,r:8})}</td></tr>`)}</td>`;
  return outer('#f2f4f8',mCard(`
 <tr><td bgcolor="${C.red}" style="background:${C.red};padding:12px 28px;${F}font-size:13px;font-weight:bold;letter-spacing:2px;color:#fff;">🎉 WEEKLY DEAL · 출시 기념 특가</td></tr>
 <tr><td style="padding:26px 32px 4px;">${logo(.75)}<div style="height:16px;font-size:0;">&nbsp;</div>${mH('이번 주,<br>다이렉트몰 특가 소식 🛒')}${mP(defMsg(d))}</td></tr>
