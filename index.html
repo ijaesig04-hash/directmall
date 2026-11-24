@@ -500,6 +500,8 @@ const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const F="font-family:'Malgun Gothic','Apple SD Gothic Neo',Arial,sans-serif;";
 
 const THEMES=[
+ {id:'pkg',    n:'★ 패키지 15% 할인',p:0,w:'🆕 11.18~ · 무이자 할부',c:['#c2410c','#fff4ea','#ffffff','#3b1d0a']},
+ {id:'dooruse',n:'★ 도어캠 이런 분께',p:0,w:'🆕 4가지 활용',c:['#eef3fb','#1b4fd6','#ffffff','#0a1a3a']},
  {id:'deal',   n:'① 이번 주 특가',p:1,w:'가격 안내',c:['#e5002d','#ffffff','#deeff7','#1b4fd6']},
  {id:'tomorrow',n:'② 더 안전한 내일',p:1,w:'🆕 ⭐ 첫 인사',c:['#1b4fd6','#4fb3ff','#ffd400','#0a1a3a']},
  {id:'partner', n:'③ 비즈니스 파트너',p:1,w:'🆕 법인·사장님',c:['#123d9a','#ffffff','#ffd400','#0a1a3a']},
@@ -994,6 +996,34 @@ function bDeal(d){
 <tr><td style="padding:8px 32px 0;${F}font-size:11px;color:${C.mute};">※ ${mToday()} 다이렉트몰 기준 가격이며 바뀔 수 있어요 · ${mEmp(d)}</td></tr>
 <tr><td style="padding:22px 32px 32px;">${sigLight(d,C.red)}</td></tr>`)+foot());}
 
+/* 🎁 패키지 15% 할인 (11.18~ · 다이렉트몰 전용) */
+function bPkg(d){const OR='#c2410c';
+ const col=p=>`<td width="50%" valign="top" style="padding:6px;">${T(`width="100%" bgcolor="#ffffff" style="background:#ffffff;border:1px solid #fbd5b5;border-radius:16px;border-collapse:separate;"`,`
+  <tr><td align="center" bgcolor="#fff7ed" style="background:#fff7ed;padding:16px 8px;border-radius:16px 16px 0 0;${F}font-size:34px;">${p.k==='door2'?'🚪 ＋ 📹':'📹 ＋ 🛡️'}</td></tr>
+  <tr><td style="padding:14px 14px 4px;${F}"><div style="font-size:15px;font-weight:bold;color:${C.ink};">${p.t}</div><div style="font-size:12px;color:${C.mute};margin-top:2px;">${p.s}</div>
+   <div style="font-size:12px;color:#9aa1ae;text-decoration:line-through;margin-top:10px;">정가 ${p.was.toLocaleString('ko-KR')}원</div>
+   <div style="font-size:22px;font-weight:900;color:${OR};">${p.now.toLocaleString('ko-KR')}원</div>
+   <div style="display:inline-block;margin-top:6px;background:#ffedd5;color:${OR};font-size:12px;font-weight:bold;border-radius:20px;padding:3px 10px;">${p.off/1000}천원 (15%) 할인</div></td></tr>
+  <tr><td style="padding:10px 14px 16px;">${btn('구매하러 가기',OR,'#fff',{pad:'10px 18px',size:13,r:8})}</td></tr>`)}</td>`;
+ return outer('#fff4ea',mCard(`
+<tr><td bgcolor="${OR}" style="background:${OR};padding:12px 28px;${F}font-size:13px;font-weight:bold;letter-spacing:2px;color:#fff;">🎁 NEW · 11.18(수) 오픈 · 다이렉트몰 전용</td></tr>
+<tr><td style="padding:26px 32px 4px;">${logo(.75)}<div style="height:16px;font-size:0;">&nbsp;</div>${mH('패키지로 사면<br>15% 할인 + 무이자 할부 💳')}${mP(defMsg(d))}</td></tr>
+<tr><td style="padding:18px 22px 0;">${T('width="100%"',`<tr>${PKG.map(col).join('')}</tr>`)}</td></tr>
+<tr><td style="padding:12px 32px 0;${F}font-size:13px;color:#3b1d0a;"><b>💳 무이자 할부</b>로 부담 없이 결제할 수 있어요.</td></tr>
+<tr><td style="padding:6px 32px 0;${F}font-size:11px;color:${C.mute};">※ 11.18(수)부터 적용 · 다이렉트몰 전용 상품 · 가격은 바뀔 수 있어요 · ${mEmp(d)}</td></tr>
+<tr><td style="padding:22px 32px 32px;">${sigLight(d,OR)}</td></tr>`)+foot());}
+/* 🚪 AI 도어캠 — 이런 분께 꼭 필요해요 */
+function bDoorUse(d){const BL=C.blue;
+ const cell=([ic,t,s,b])=>`<td width="50%" valign="top" style="padding:6px;">${T(`width="100%" bgcolor="#ffffff" style="background:#ffffff;border:1px solid ${C.line};border-top:4px solid ${BL};border-radius:14px;border-collapse:separate;"`,`
+  <tr><td style="padding:14px 14px 16px;${F}"><div style="font-size:28px;">${ic}</div><div style="font-size:15px;font-weight:bold;color:${C.navy};margin-top:4px;">${t}</div>
+  <div style="font-size:12px;font-weight:bold;color:${BL};margin-top:4px;">${s}</div><div style="font-size:12px;color:#4a5262;line-height:1.6;margin-top:6px;">${b}</div></td></tr>`)}</td>`;
+ return outer('#eef3fb',mCard(`
+<tr><td style="padding:30px 32px 0;">${logo(.8)}</td></tr>
+<tr><td style="padding:22px 32px 4px;"><div style="${F}font-size:12px;font-weight:bold;letter-spacing:2px;color:${BL};">AI DOORCAM</div>${mH('이런 분께<br>AI 도어캠이 꼭 필요해요 🚪')}${mP(defMsg(d))}</td></tr>
+<tr><td style="padding:18px 22px 0;">${T('width="100%"',`<tr>${cell(DOORUSE[0])}${cell(DOORUSE[1])}</tr><tr>${cell(DOORUSE[2])}${cell(DOORUSE[3])}</tr>`)}</td></tr>
+<tr><td style="padding:14px 32px 0;${F}font-size:13px;color:${C.navy};">🎁 <b>도어캠 + 홈카메라 패키지</b> 371,000원 (정가 437,000원 · 15% 할인) · 무이자 할부</td></tr>
+<tr><td align="center" style="padding:20px 32px 8px;">${btn('AI 도어캠 보러가기 →',BL,'#fff',{href:PRODUCT_URL.doorcam})}</td></tr>
+<tr><td style="padding:22px 32px 32px;">${sigLight(d,BL)}</td></tr>`)+foot());}
 /* ⑤ 생활 안전 팁 */
 function bTips(d){
  const home=[['🚪','현관 앞 택배는 바로 챙기기','오래 두면 분실 위험이 커져요. AI도어캠으로 도착을 바로 확인하세요.'],['🧯','소화기는 눈에 띄는 곳에','주방 가까이에 두고 사용법을 가족과 함께 익혀 두세요.'],['🔐','중요 서류·귀중품은 한곳에','화재·도난에 대비해 안전금고에 보관하면 든든해요.']];
@@ -1119,7 +1149,7 @@ function bQuiz(d){
 <tr><td align="center" style="padding:24px 32px 8px;">${btn('다이렉트몰 바로가기 →','#d9731f','#fff')}</td></tr>
 <tr><td style="padding:22px 32px 32px;">${sigLight(d,'#d9731f')}</td></tr>`)+foot());}
 
-const BUILD={tomorrow:bTomorrow,partner:bPartner,fieldmgr:bFieldMgr,quiz:bQuiz,faq:bFaq,bundle:bBundle,deal:bDeal,tips:bTips,timeline:bTimeline,seasonal:bSeasonal,checklist:bChecklist,newsletter:bNewsletter,consult:bConsult,night:bNight,toon:bToon,catalog:bCatalog,quick:bQuick,campus:bCampus,hero:bHero,control:bControl,branch:bBranch,lime:bLime,minimal:bMinimal,card:bCard,pass:bPass,key:bKey,chat:bChat,letter:bLetter};
+const BUILD={pkg:bPkg,dooruse:bDoorUse,tomorrow:bTomorrow,partner:bPartner,fieldmgr:bFieldMgr,quiz:bQuiz,faq:bFaq,bundle:bBundle,deal:bDeal,tips:bTips,timeline:bTimeline,seasonal:bSeasonal,checklist:bChecklist,newsletter:bNewsletter,consult:bConsult,night:bNight,toon:bToon,catalog:bCatalog,quick:bQuick,campus:bCampus,hero:bHero,control:bControl,branch:bBranch,lime:bLime,minimal:bMinimal,card:bCard,pass:bPass,key:bKey,chat:bChat,letter:bLetter};
 /* 🎴 카드형 메일 — 카톡 카드 이미지를 메일 본문에 넣음 */
 let kcMailCache={k:'',url:''};
 function kcardMailImg(id){
@@ -1714,6 +1744,46 @@ function kProdHero(d,o){const [c,x]=kctx(),W=1080,BL='#1b4fd6',RED='#e5002d';x.f
   const f=kfit(x,`🎁 결제 때 사원번호 ${d.emp} 입력하면 10% 추가 할인`,820,28,20,1);klines(x,f.lines,W/2,Y+249,f.size,0,'#1a1f2b',{a:'center'});
   Y+=330;ktext(x,`※ ${nowK().M}/${nowK().D} 다이렉트몰 기준 가격이며 바뀔 수 있어요`,72,Y,22,'#6b7488',{w:'normal'});Y+=40;
   Y=krep(x,d,Y,{shadow:1});return kcrop(c,Y+72);}
+/* 🎁 다이렉트몰 패키지 15% 할인 (11.18~ · 다이렉트몰 전용) */
+const PKG=[{k:'door2',img:['door','cam'],t:'도어캠 + 홈카메라',s:'현관과 집 안을 한 번에',was:437000,now:371000,off:66000},
+ {k:'cam2',img:['cam'],t:'홈카메라 + 부가서비스 12개월',s:'안심보상 + 긴급출동 1년 포함',was:217000,now:185000,off:32000}];
+function kPkg(d){const [c,x]=kctx(),W=1080,OR='#c2410c',BG='#fff4ea';x.fillStyle=BG;x.fillRect(0,0,W,c.height);
+  klogo(x,72,64);ktext(x,'S-1 DIRECT MALL',1008,128,26,OR,{a:'right',ls:3});
+  kfont(x,28);const bt='🆕 11.18(수) 오픈 · 다이렉트몰 전용',bw=x.measureText(bt).width+56;x.fillStyle=OR;rr(x,72,240,bw,60,30);x.fill();ktext(x,bt,100,281,28,'#fff');
+  ktext(x,'패키지로 사면',72,400,84,'#3b1d0a');ktext(x,'15% 할인',72,500,96,OR);
+  ktext(x,'+ 무이자 할부까지',72,566,40,'#7c4a22');
+  let Y=620;const th=KCOMPACT?470:560,ih=KCOMPACT?170:250;
+  PKG.forEach((p,i)=>{x.save();kshadow(x,1,.10);x.fillStyle='#fff';rr(x,72,Y,936,th,32);x.fill();x.restore();
+    if(p.img.length===2){kfitImg(x,p.img[0],112,Y+30,400,ih);kfitImg(x,p.img[1],548,Y+30,400,ih);ktext(x,'＋',W/2,Y+30+ih/2+24,56,OR,{a:'center'});}
+    else{kfitImg(x,'cam',150,Y+30,420,ih);x.fillStyle='#fff7ed';rr(x,620,Y+50,330,ih-40,24);x.fill();x.strokeStyle='#fdba74';x.lineWidth=3;rr(x,620,Y+50,330,ih-40,24);x.stroke();
+      ktext(x,'안심보상 + 긴급출동',785,Y+50+(ih-40)/2-14,26,OR,{a:'center'});ktext(x,'1년',785,Y+50+(ih-40)/2+50,64,OR,{a:'center'});}
+    let b=Y+ih+90;ktext(x,p.t,112,b,40,'#1a1f2b');ktext(x,p.s,112,b+46,26,'#7c8699',{w:'normal'});
+    const ow=ktext(x,'정가 '+kwon(p.was),112,b+112,30,'#9aa1ae',{w:'normal'});x.fillStyle='#9aa1ae';x.fillRect(112,b+101,ow,3);
+    const pw=ktext(x,kwon(p.now),112,b+190,76,OR);
+    kfont(x,28);const tg=`${(p.off/1000)}천원 (15%) 할인`,tw=x.measureText(tg).width+48;x.fillStyle='#ffedd5';rr(x,968-tw,b+138,tw,60,30);x.fill();ktext(x,tg,968-tw/2,b+178,28,OR,{a:'center'});
+    Y+=th+28;});
+  x.fillStyle='#fff';rr(x,72,Y,936,120,24);x.fill();ktext(x,'💳 다이렉트몰에서 무이자 할부 결제 가능',W/2,Y+56,32,'#3b1d0a',{a:'center'});ktext(x,'※ 11.18(수)부터 적용 · 다이렉트몰 전용 상품',W/2,Y+98,24,'#7c8699',{a:'center',w:'normal'});
+  Y+=160;Y=krep(x,d,Y,{shadow:1});return kcrop(c,Y+72);}
+/* 🚪 AI 도어캠 — 이런 분께 꼭 필요해요 (4가지 활용) */
+const DOORUSE=[['🏠','우리 집(자택) 안전','맞벌이·출장으로 집을 비울 때','아이 혼자 귀가할 때, 수상한 방문객까지 폰으로 확인'],
+ ['👵','멀리 계신 부모님','시골·원거리 부모님 댁 현관 지킴이','자주 못 가도 부모님 댁 앞 상황을 언제든 확인'],
+ ['📦','택배 도난 걱정 끝','도착 알림 + 도난 보상(부가서비스)','문 앞 택배 분실 걱정 없이, 도착하면 바로 알림'],
+ ['💰','공사 없이 저렴하게','타공·배선 공사 없이 간편 설치','CCTV 비용 부담 없이 원룸·상가·사무실 보안 강화']];
+function kDoorUse(d){const [c,x]=kctx(),W=1080,NV='#0a1a3a',BL='#1b4fd6';x.fillStyle='#eef3fb';x.fillRect(0,0,W,c.height);
+  klogo(x,72,64);ktext(x,'AI DOORCAM',1008,128,26,BL,{a:'right',ls:3});
+  ktext(x,'이런 분께',72,330,84,NV);ktext(x,'AI 도어캠이 꼭 필요해요',72,430,64,BL);
+  let Y=480;const ih=KCOMPACT?200:300;kfitImg(x,'door',290,Y,500,ih);Y+=ih+30;
+  const tw=(936-24)/2,th=KCOMPACT?300:340;
+  DOORUSE.forEach(([ic,t,s,b],i)=>{const X=72+(i%2)*(tw+24),ty=Y+Math.floor(i/2)*(th+24);
+    x.save();kshadow(x,1,.08);x.fillStyle='#fff';rr(x,X,ty,tw,th,28);x.fill();x.restore();
+    x.fillStyle=BL;rr(x,X,ty,tw,10,5);x.fill();
+    ktext(x,ic,X+32,ty+92,56,'#000');ktext(x,t,X+32,ty+160,36,NV);
+    const f1=kfit(x,s,tw-64,25,20,2);klines(x,f1.lines,X+32,ty+206,f1.size,f1.size*1.4,BL);
+    const f2=kfit(x,b,tw-64,24,19,3,'normal');klines(x,f2.lines,X+32,ty+206+f1.lines.length*f1.size*1.4+10,f2.size,f2.size*1.45,'#4a5262',{w:'normal'});});
+  Y+=2*(th+24)+10;
+  const g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,NV);g.addColorStop(1,BL);x.fillStyle=g;rr(x,72,Y,936,120,24);x.fill();
+  ktext(x,'패키지로 사면 15% 할인 · 무이자 할부',W/2,Y+74,34,'#fff',{a:'center'});
+  Y+=160;Y=krep(x,d,Y,{shadow:1});return kcrop(c,Y+72);}
 /* AI 홈카메라 특가 */
 function kAICam(d){return kProdHero(d,{bg:'#deeff7',title:'AI 홈카메라',sub:'움직임을 따라가는 AI',img:'cam',ih:640,was:130000,now:98000,pct:25});}
 /* AI 도어캠 특가 */
@@ -1732,6 +1802,8 @@ function kAED(d){const [c,x]=kctx(),W=1080,OR='#ff6a13';x.fillStyle='#f6f7f9';x.
   Y=kdisc(x,Y)+30;Y=krep(x,d,Y,{shadow:1});const H=Y+72,w2=1080+2*KWIDE;KZ=zs.map(([k,X,ty,tw_,th_])=>[k,(X+KWIDE)/w2,ty/H,tw_/w2,th_/H]);return kcrop(c,H);}
 
 const KTHEMES=[
+ {id:'pkg',    n:'★ 패키지 15% 할인',w:'🆕 11.18~ · 무이자 할부',c:['#fff4ea','#c2410c','#ffffff','#3b1d0a'],tone:'benefit',p:1,f:kPkg},
+ {id:'dooruse',n:'★ 도어캠 이런 분께',w:'🆕 4가지 활용',c:['#eef3fb','#1b4fd6','#ffffff','#0a1a3a'],tone:'friendly',p:1,f:kDoorUse},
  {id:'aicam',  n:'① AI 홈카메라 특가',w:'🆕 98,000원 · 25%',  c:['#deeff7','#ffffff','#1b4fd6','#e5002d'],tone:'benefit',p:1,f:kAICam},
  {id:'doorcam',n:'② AI 도어캠 특가',  w:'🆕 339,000원 · 28%', c:['#f5f5f5','#1a1f2b','#c8a45a','#e5002d'],tone:'benefit',p:1,f:kDoorCam},
  {id:'aed',    n:'③ AED 소모품',      w:'🆕 패드·가방·배터리',c:['#e5002d','#ff6a13','#ffffff','#1b8fd6'],tone:'formal',p:1,f:kAED},
